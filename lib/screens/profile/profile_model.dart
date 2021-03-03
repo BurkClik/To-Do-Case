@@ -1,12 +1,12 @@
 class ProfileModel {
-  final String fullname;
+  final String username;
   final String city;
 
-  ProfileModel({this.fullname, this.city});
+  ProfileModel({this.username, this.city});
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
-      fullname: json["data"][0]["fullname"],
+      username: json["data"][0]["username"],
       city: json["data"][0]["city"],
     );
   }

@@ -25,6 +25,10 @@ dependencies:
     sdk: flutter
   http: ^0.12.2
   shared_preferences: '>=0.5.12+4 <2.0.0'
+  provider: ^4.3.3
+  geolocator: 6.2.0
+  geocoding: ^1.0.5
+  image_picker: 0.6.7+22
 
 
   # The following adds the Cupertino Icons font to your application.

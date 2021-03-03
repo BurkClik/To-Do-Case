@@ -1,13 +1,19 @@
-class Todo {
+class TodoModel {
+  final int id;
+  final int count;
   final String name;
-  final DateTime date;
+  final String date;
+  final List todoList;
 
-  Todo({this.name, this.date});
+  TodoModel({this.id, this.count, this.name, this.date, this.todoList});
 
-  factory Todo.fromJson(Map<String, dynamic> json) {
-    return Todo(
-      name: json["name"],
-      date: json["date"],
+  factory TodoModel.fromJson(Map<String, dynamic> json) {
+    return TodoModel(
+      id: json["body"][2]["id"],
+      count: json["count"],
+      name: json["body"][2]["name"],
+      date: json["body"][2]["date"],
+      todoList: json["body"],
     );
   }
 }
