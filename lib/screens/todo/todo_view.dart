@@ -4,6 +4,7 @@ import 'package:todo/provider.dart';
 import 'package:todo/screens/todo/todo_model.dart';
 import 'package:todo/services/api_service.dart';
 import 'package:provider/provider.dart';
+import 'package:todo/theme/constant.dart';
 
 class TodoView extends StatefulWidget {
   @override
@@ -13,11 +14,9 @@ class TodoView extends StatefulWidget {
 class _TodoViewState extends State<TodoView> {
   Future<TodoModel> todoModel;
 
-  List<String> deneme = [];
-
   TextEditingController searchController = TextEditingController();
 
-  int demo = 0;
+  int searchWordCount = 0;
 
   @override
   void initState() {
@@ -35,110 +34,13 @@ class _TodoViewState extends State<TodoView> {
             children: [
               Expanded(
                 flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Container(
-                    height: 32,
-                    child: TextFormField(
-                      onChanged: (text) {
-                        text = text.toLowerCase();
-                        setState(() {
-                          demo = searchController.text.length;
-                        });
-                      },
-                      controller: searchController,
-                      decoration: InputDecoration(
-                        suffix: IconButton(
-                          onPressed: () {
-                            print(context.read<SearchProvider>().searchResult);
-                          },
-                          icon: Icon(Icons.search),
-                        ),
-                        hintText: 'Görev Ara',
-                        filled: true,
-                        fillColor: Colors.black.withOpacity(0.2),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                child: searchBar(),
               ),
               Expanded(
                 flex: 10,
-                child: demo == 0
-                    ? ListView.builder(
-                        physics: BouncingScrollPhysics(),
-                        itemCount: snapshot.data.count,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24.0,
-                              vertical: 8.0,
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Dismissible(
-                                background: Container(
-                                  padding: EdgeInsets.only(left: 24.0),
-                                  color: Color(0xFFA6C2A7),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Tamamlandı!',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'Kanit',
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                key: Key(snapshot.data.todoList[index]["name"]),
-                                direction: DismissDirection.startToEnd,
-                                onDismissed: (direction) {
-                                  deleteTodo(
-                                      snapshot.data.todoList[index]["id"]);
-                                },
-                                child: ListTile(
-                                  shape: RoundedRectangleBorder(),
-                                  tileColor: Colors.white,
-                                  leading: IconButton(
-                                    onPressed: () {
-                                      deleteTodo(
-                                          snapshot.data.todoList[index]["id"]);
-                                    },
-                                    icon: Icon(Icons.delete),
-                                  ),
-                                  title: Text(
-                                    '${snapshot.data.todoList[index]["name"]}',
-                                    style: TextStyle(
-                                      fontFamily: 'Kanit',
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                      '${DateTime.parse(snapshot.data.todoList[index]["date"])}'),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    : ListView.builder(
-                        itemCount:
-                            context.read<SearchProvider>().resultLenght(),
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(context
-                                .read<SearchProvider>()
-                                .searchResult[index]),
-                          );
-                        },
-                      ),
+                child: searchWordCount == 0
+                    ? allTodosList(snapshot)
+                    : searchTodosList(context),
               ),
             ],
           );
@@ -147,6 +49,100 @@ class _TodoViewState extends State<TodoView> {
         }
         return Center(child: CircularProgressIndicator());
       },
+    );
+  }
+
+  Padding searchBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Container(
+        height: 32,
+        child: TextFormField(
+          onChanged: (text) {
+            text = text.toLowerCase();
+            setState(() {
+              searchWordCount = searchController.text.length;
+            });
+          },
+          controller: searchController,
+          decoration: InputDecoration(
+            hintText: 'Görev Ara',
+            filled: true,
+            fillColor: Colors.black.withOpacity(0.2),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  ListView searchTodosList(BuildContext context) {
+    return ListView.builder(
+      itemCount: context.read<SearchProvider>().resultLenght(),
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(context.read<SearchProvider>().searchResult[index]),
+        );
+      },
+    );
+  }
+
+  ListView allTodosList(AsyncSnapshot<TodoModel> snapshot) {
+    return ListView.builder(
+      physics: BouncingScrollPhysics(),
+      itemCount: snapshot.data.count,
+      itemBuilder: (context, index) {
+        return todoListTile(snapshot, index);
+      },
+    );
+  }
+
+  Padding todoListTile(AsyncSnapshot<TodoModel> snapshot, int index) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 24.0,
+        vertical: 8.0,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Dismissible(
+          background: Container(
+            padding: EdgeInsets.only(left: 24.0),
+            color: Color(0xFFA6C2A7),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Tamamlandı!',
+                style: kDismissibleTextStyle,
+              ),
+            ),
+          ),
+          key: Key(snapshot.data.todoList[index]["name"]),
+          direction: DismissDirection.startToEnd,
+          onDismissed: (direction) {
+            deleteTodo(snapshot.data.todoList[index]["id"]);
+          },
+          child: ListTile(
+            shape: RoundedRectangleBorder(),
+            tileColor: Colors.white,
+            leading: IconButton(
+              onPressed: () {
+                deleteTodo(snapshot.data.todoList[index]["id"]);
+              },
+              icon: Icon(Icons.delete),
+            ),
+            title: Text(
+              '${snapshot.data.todoList[index]["name"]}',
+              style: kTodoNameTextStyle,
+            ),
+            subtitle: Text(
+                '${DateTime.parse(snapshot.data.todoList[index]["date"])}'),
+          ),
+        ),
+      ),
     );
   }
 }

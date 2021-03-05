@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/screens/login/login_model.dart';
 import 'package:todo/services/api_service.dart';
+import 'package:todo/theme/constant.dart';
 
 class LoginView extends StatefulWidget {
   static String routeName = '/login';
@@ -37,11 +38,7 @@ class _LoginViewState extends State<LoginView> {
                     padding: const EdgeInsets.only(left: 28.0),
                     child: Text(
                       'Hoşgeldiniz',
-                      style: TextStyle(
-                        fontSize: 36,
-                        color: Colors.white,
-                        fontFamily: 'Kanit',
-                      ),
+                      style: kWelcomeTextSTyle,
                     ),
                   ),
                 ],
@@ -60,11 +57,7 @@ class _LoginViewState extends State<LoginView> {
                           controller: emailController,
                           decoration: InputDecoration(
                             hintText: "Email",
-                            hintStyle: TextStyle(
-                              fontFamily: 'Kanit',
-                              fontSize: 20,
-                              color: Colors.black.withOpacity(0.4),
-                            ),
+                            hintStyle: kLoginFormTextStyle,
                           ),
                         ),
                       ),
@@ -75,11 +68,7 @@ class _LoginViewState extends State<LoginView> {
                           controller: passwordController,
                           decoration: InputDecoration(
                             hintText: "Parola",
-                            hintStyle: TextStyle(
-                              fontFamily: 'Kanit',
-                              fontSize: 20,
-                              color: Colors.black.withOpacity(0.4),
-                            ),
+                            hintStyle: kLoginFormTextStyle,
                           ),
                         ),
                       ),
@@ -90,11 +79,7 @@ class _LoginViewState extends State<LoginView> {
                           children: [
                             Text(
                               'Giriş Yap',
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontFamily: 'Kanit',
-                                color: Colors.black.withOpacity(0.7),
-                              ),
+                              style: kSignTextStyle,
                             ),
                             ElevatedButton(
                               onPressed: () {

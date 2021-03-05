@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todo/provider.dart';
 import 'package:todo/routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo/theme/theme.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,13 +23,7 @@ class MyApp extends StatelessWidget {
             create: (_) => LocationProvider(loc)),
       ],
       child: MaterialApp(
-        theme: ThemeData(
-          brightness: Brightness.light,
-          primaryColor: Colors.red,
-        ),
-        darkTheme: ThemeData(
-          brightness: Brightness.dark,
-        ),
+        theme: theme(),
         debugShowCheckedModeBanner: false,
         routes: routes,
         initialRoute: AuthWrapper.routeName,

@@ -53,40 +53,12 @@ class _HomeViewState extends State<HomeView> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.black,
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('ToDo'),
-                    content: SingleChildScrollView(
-                      child: ListBody(
-                        children: [
-                          TextFormField(
-                            controller: todoNameController,
-                          ),
-                          ElevatedButton(
-                            onPressed: () async {
-                              await postNewTodo(
-                                name: todoNameController.text,
-                                date: DateTime.now().toIso8601String(),
-                                context: context,
-                              );
-                              todoNameController.clear();
-                            },
-                            child: Text('Yeni Todo'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                });
+          onPressed: () async {
+            await addTodo(context);
           },
           child: Icon(Icons.add),
         ),
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
           leading: _currentViewList == 1
               ? IconButton(
                   onPressed: () {
@@ -133,5 +105,41 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
         body: _viewList[_currentViewList]);
+  }
+
+  addTodo(BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Center(child: Text('Yeni Görev')),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  TextFormField(
+                    controller: todoNameController,
+                    decoration: InputDecoration(
+                      hintText: 'Görev Ekle',
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await postNewTodo(
+                        name: todoNameController.text,
+                        date: DateTime.now().toIso8601String(),
+                        context: context,
+                      );
+                      todoNameController.clear();
+                    },
+                    child: Text('Yeni Todo'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xFFFF9D73),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }

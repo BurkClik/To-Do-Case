@@ -54,7 +54,7 @@ class _ProfileViewState extends State<ProfileView> {
                     child: CircleAvatar(
                       backgroundImage: _image != null
                           ? FileImage(_image)
-                          : NetworkImage("https://source.unsplash.com/random"),
+                          : AssetImage("assets/images/image_placaholder.png"),
                       radius: 72,
                     ),
                   ),
@@ -76,13 +76,15 @@ class _ProfileViewState extends State<ProfileView> {
                     ],
                   ),
                   SizedBox(height: 24),
-                  Text(
-                    '${context.watch<LocationProvider>().loc}',
-                    style: TextStyle(
-                      fontFamily: 'Kanit',
-                      fontSize: 20,
-                    ),
-                  ),
+                  context.watch<LocationProvider>().loc.isEmpty
+                      ? Text('Konum')
+                      : Text(
+                          '${context.watch<LocationProvider>().loc}',
+                          style: TextStyle(
+                            fontFamily: 'Kanit',
+                            fontSize: 20,
+                          ),
+                        ),
                 ],
               ),
             );

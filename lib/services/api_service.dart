@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo/animation_route.dart';
 import 'package:todo/screens/home/home_view.dart';
 import 'package:todo/screens/login/login_model.dart';
+import 'package:todo/screens/login/login_view.dart';
 import 'package:todo/screens/profile/profile_model.dart';
 import 'package:todo/screens/todo/todo_model.dart';
 
@@ -22,7 +24,6 @@ Future<ProfileModel> fetchUserInfos() async {
   });
 
   if (response.statusCode == 200) {
-    print(response.body);
     return ProfileModel.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('Failed to load user');
@@ -49,9 +50,8 @@ Future<LoginModel> fetchLoginInfo(
   if (response.statusCode == 200) {
     sharedPreferences.setString("token", json.decode(response.body)["token"]);
     sharedPreferences.setInt("userId", json.decode(response.body)["userId"]);
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (BuildContext context) => HomeView()),
-        (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .pushReplacement(enterExitRoute(LoginView(), HomeView()));
     return LoginModel.fromJson(jsonDecode(response.body));
   } else {
     throw new Exception("Failed to load login status");
@@ -76,7 +76,6 @@ postNewTodo({String name, String date, BuildContext context}) async {
   );
 
   if (response.statusCode == 200) {
-    print(response.body);
     Navigator.of(context).pop();
   } else {
     throw new Exception("Failed to load todo post");
